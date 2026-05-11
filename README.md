@@ -5,7 +5,7 @@ A collection of scripts to automate common QA workflows — log analysis, data v
 ## Tools
 - log_reader.py — parse and summarize ERROR lines from log files
 - json_diff.py - compare JSON files, report missing keys and value differences
-
+- api_checker.py - call API, print status + response summary
 ## How to run
 
 - log_reader
@@ -20,4 +20,10 @@ python log_reader.py
 ```bash
 cd qa-toolkit/json_diff
 python json_diff.py
+```
+
+- api_checker
+```bash
+cd qa-toolkit/api_checker
+python api_checker.py
 ```
