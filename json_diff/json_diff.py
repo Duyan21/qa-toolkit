@@ -1,6 +1,5 @@
 import json
 
-
 with open("staging.json", "r") as f1, open("production.json", "r") as f2:
     data1 = json.load(f1)
     data2 = json.load(f2)
