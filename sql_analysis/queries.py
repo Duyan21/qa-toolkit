@@ -10,7 +10,7 @@ def run_query(cursor, title, sql: str, format_fn):
     for row in rows:
         print(format_fn(row))
 
-# Query 1: Tổng số test runs theo từng module
+# Query 1: Total failed tests by module
 run_query(
     cursor,
     "Total failed tests by module:",
@@ -23,7 +23,7 @@ run_query(
     lambda row: f"Module: {row[0]} | Total failed: {row[1]}"
 )
 
-# Query 2: Failed tests theo từng ngày, từng module
+# Query 2: Failed tests by date and module
 run_query(
     cursor,
     "Failed tests by date and module:",
@@ -35,10 +35,10 @@ run_query(
     lambda row: f"Date: {row[0]} | Module: {row[1]} | Failed: {row[2]}"
 )
 
-# Query 3: Failure rate theo module theo ngày (%)
+# Query 3: Failure rate by module and date (%)
 run_query(
     cursor,
-    "Failure rate by date:",
+    "Failure rate by module and date:",
     """
     SELECT 
         run_date,
