@@ -1,5 +1,6 @@
 *.log
 *.db
 sql_analysis/vscode_issues.json
+log_reader/live_app.log
 __pycache__/
 *.pyc
