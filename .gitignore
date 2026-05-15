@@ -2,5 +2,6 @@
 *.db
 sql_analysis/vscode_issues.json
 log_reader/live_app.log
+api_checker/api_health.log
 __pycache__/
 *.pyc
