@@ -1,14 +1,14 @@
 # Debug: JSON Mismatch (staging vs production)
 
-Dùng khi `json_diff` báo missing keys hoặc different values giữa hai environment.
-Không chắc đây là vấn đề của bạn? → [triage.md]
+Use when `json_diff` reports missing keys or different values between two environments.
+Not sure this is your issue? → [triage.md](triage.md)
 
-> JSON mismatch giữa staging và production thường không phải lỗi code —
-> thường là config drift, deploy thiếu bước, hoặc data migration chưa chạy.
+> JSON mismatches between staging and production are rarely a code bug —
+> they usually point to config drift, an incomplete deploy, or a migration that hasn't run.
 
 ---
 
-## Đọc output của json_diff
+## Read the json_diff output first
 
 ```
 Missing keys in production: 1
@@ -21,57 +21,57 @@ Identical: 3
  status, user_id, email
 ```
 
-Thu thập ngay:
-- [ ] Key nào bị missing? Field nào có giá trị khác nhau?
-- [ ] Missing key hay different value — hai trường hợp này có nguyên nhân khác nhau
+Collect immediately:
+- [ ] Which keys are missing? Which fields have different values?
+- [ ] Missing key vs different value — these have different root causes
 
 ---
 
-## Bước 1 — Phân loại vấn đề
+## Step 1 — Classify the problem
 
-| Triệu chứng                        | Khả năng nguyên nhân                        |
-|------------------------------------|---------------------------------------------|
-| Key có trong staging, thiếu ở prod | Deploy chưa đầy đủ / migration chưa chạy   |
-| Key có ở prod, thiếu ở staging     | Staging đang chạy version cũ hơn            |
-| Cùng key nhưng value khác nhau     | Config khác nhau giữa môi trường            |
-| Nhiều key bị missing cùng lúc      | Có thể là schema change chưa được apply     |
-
----
-
-## Bước 2 — Xác định nguồn gốc
-
-- [ ] Field bị mismatch đến từ đâu? (API response, config file, database, feature flag)
-- [ ] Hai environment đang chạy cùng version code không?
-- [ ] Có deploy nào gần đây ở một môi trường mà không có ở môi trường kia?
-- [ ] Có migration hoặc seed script nào cần chạy ở production chưa?
+| Symptom                                  | Likely cause                                    |
+|------------------------------------------|-------------------------------------------------|
+| Key exists in staging, missing in prod   | Incomplete deploy or migration not yet run      |
+| Key exists in prod, missing in staging   | Staging is running an older version             |
+| Same key but different values            | Environment-specific config difference          |
+| Multiple keys missing at once            | Schema change not applied to one environment    |
 
 ---
 
-## Bước 3 — Verify thủ công
+## Step 2 — Identify the source
 
-- [ ] Gọi thẳng endpoint ở cả hai môi trường và compare response
-- [ ] Check config / environment variables của hai môi trường
-- [ ] Nếu là database field: check schema của hai môi trường có khớp không
-
----
-
-## Bước 4 — Escalate nếu cần
-
-⏱ Nếu sau **30 phút** không xác định được nguyên nhân → escalate
-
-Chuẩn bị khi escalate:
-- Output đầy đủ từ `json_diff`
-- Version code đang chạy ở từng môi trường
-- Thời điểm mismatch bắt đầu xuất hiện (nếu biết)
-
-→ Xem thông tin escalation tại [triage.md]
+- [ ] Where does the mismatched field come from? (API response, config file, database, feature flag)
+- [ ] Are both environments running the same version of the code?
+- [ ] Was there a recent deploy to one environment but not the other?
+- [ ] Is there a migration or seed script that still needs to run in production?
 
 ---
 
-## Bước 5 — Verify fix
+## Step 3 — Verify manually
 
-- [ ] Chạy lại `json_diff` sau khi fix → không còn mismatch?
-- [ ] Chạy trên cả hai chiều: staging vs prod và prod vs staging
+- [ ] Call the endpoint directly on both environments and compare responses
+- [ ] Check config and environment variables across both environments
+- [ ] If it is a database field: check whether the schema matches on both sides
+
+---
+
+## Step 4 — Escalate if needed
+
+⏱ If the root cause is still unclear after **30 minutes** → escalate
+
+Prepare when escalating:
+- Full output from `json_diff`
+- Code version currently running in each environment
+- When the mismatch first appeared (if known)
+
+→ See escalation contacts at [triage.md](triage.md)
+
+---
+
+## Step 5 — Verify the fix
+
+- [ ] Re-run `json_diff` after the fix → no more mismatches?
+- [ ] Run in both directions: staging vs prod and prod vs staging
 
 ```
 Root cause   : 

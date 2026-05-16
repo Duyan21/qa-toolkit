@@ -1,72 +1,72 @@
 # Debug: API 5xx Errors
 
-Dùng khi `api_checker` báo ❌ với status 500, 502, 503, 504.
-Không chắc đây là vấn đề của bạn? → [triage.md]
+Use when `api_checker` reports ❌ with status 500, 502, 503, or 504.
+Not sure this is your issue? → [triage.md](triage.md)
 
 ---
 
-## Bước 0 — Reproduce (làm trước mọi thứ)
+## Step 0 — Reproduce (do this before anything else)
 
-- [ ] Đã reproduce được chưa?
-- [ ] Tỉ lệ reproduce: 100% / intermittent / chỉ một endpoint cụ thể?
-- [ ] Nếu chưa reproduce được → **dừng lại**, thu thập log thêm trước khi debug tiếp
-
----
-
-## Bước 1 — Đọc response
-
-- [ ] Status code chính xác là bao nhiêu? (500 / 502 / 503 / 504)
-- [ ] Response body nói gì? (error message, stack trace nếu có)
-- [ ] Error message có đủ context hay chỉ là generic message?
-
-> **Phân biệt nhanh:**
-> - `500` Internal Server Error → lỗi trong code của service
-> - `502` Bad Gateway → service phía sau không response được
-> - `503` Service Unavailable → service đang overload hoặc down
-> - `504` Gateway Timeout → service phía sau quá chậm
+- [ ] Can you reproduce the error?
+- [ ] Reproduction rate: 100% / intermittent / only on a specific endpoint?
+- [ ] If not reproducible → **stop**, collect more logs before continuing
 
 ---
 
-## Bước 2 — Thu thập thông tin
+## Step 1 — Read the response
 
-- [ ] Request: URL, method, headers, body đầy đủ
-- [ ] Timestamp và timezone của request lỗi
+- [ ] What is the exact status code? (500 / 502 / 503 / 504)
+- [ ] What does the response body say? (error message, stack trace if present)
+- [ ] Is the error message specific enough, or is it a generic message?
+
+> **Quick reference:**
+> - `500` Internal Server Error → bug in the service's own code
+> - `502` Bad Gateway → upstream service is not responding
+> - `503` Service Unavailable → service is overloaded or down
+> - `504` Gateway Timeout → upstream service is too slow to respond
+
+---
+
+## Step 2 — Collect information
+
+- [ ] Full request details: URL, method, headers, body
+- [ ] Timestamp and timezone of the failing request
 - [ ] Environment: local / staging / production?
-- [ ] Frequency: luôn fail hay intermittent?
-- [ ] Có deploy hoặc config change nào gần đây không?
+- [ ] Frequency: always failing or intermittent?
+- [ ] Any recent deploy or config change?
 
 ---
 
-## Bước 3 — Check logs
+## Step 3 — Check logs
 
-- [ ] Server log trong khoảng thời gian xảy ra lỗi
-- [ ] Có pattern không — lỗi tương tự đã xảy ra trước đó?
-- [ ] Dùng `log_watcher` hoặc `log_reader` để parse nếu log volume lớn
+- [ ] Server logs around the time the error occurred
+- [ ] Any pattern — has a similar error happened before?
+- [ ] Use `log_watcher` or `log_reader` to parse if log volume is high
 
-> **Với hệ thống có BFF layer:**
-> - HTTP 200 không có nghĩa là success
-> - Luôn check response body — có thể có `status`/`code`/`error` field bên trong
-> - Trace request qua từng layer: FE → BFF → Service
-
----
-
-## Bước 4 — Escalate nếu cần
-
-⏱ Nếu sau **30 phút** chưa xác định được nguyên nhân → escalate ngay
-
-- [ ] Tóm tắt được: "Lỗi X xảy ra ở Y, tần suất Z, đã thử A và B"
-- [ ] Xác định đúng team đang control service đó
-- [ ] → Xem thông tin escalation tại [triage.md]
+> **For systems with a BFF layer:**
+> - HTTP 200 does not mean success
+> - Always check the response body — it may contain a `status`, `code`, or `error` field
+> - Trace the request through each layer: FE → BFF → Service
 
 ---
 
-## Bước 5 — Verify fix
+## Step 4 — Escalate if needed
 
-- [ ] Reproduce lại scenario gốc → lỗi không còn xảy ra?
-- [ ] Check các endpoint liên quan — không có regression?
-- [ ] Đã có test case cover case này chưa? Nếu chưa → cần thêm
+⏱ If the root cause is still unclear after **30 minutes** → escalate immediately
 
-**Ghi lại sau khi fix:**
+- [ ] Can you summarize: "Error X occurs at Y, frequency Z, tried A and B"?
+- [ ] Identified the team that owns the service?
+- [ ] → See escalation contacts at [triage.md](triage.md)
+
+---
+
+## Step 5 — Verify the fix
+
+- [ ] Reproduce the original scenario → error no longer occurs?
+- [ ] Check related endpoints — no regressions?
+- [ ] Is there a test case covering this? If not → add one
+
+**Record after fixing:**
 
 ```
 Root cause   : 

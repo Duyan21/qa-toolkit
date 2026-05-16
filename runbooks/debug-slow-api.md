@@ -1,74 +1,74 @@
 # Debug: Slow API / Timeout
 
-Dùng khi `api_checker` báo ⚠️ (response time > 500ms) hoặc request không nhận được response.
-Không chắc đây là vấn đề của bạn? → [triage.md]
+Use when `api_checker` reports ⚠️ (response time > 500ms) or a request receives no response.
+Not sure this is your issue? → [triage.md](triage.md)
 
-> Slow API và timeout thường không phải lỗi code — thường là infrastructure, data, hoặc external dependency.
-
----
-
-## Bước 0 — Xác định loại vấn đề
-
-| Triệu chứng                        | Hướng xử lý                     |
-|------------------------------------|----------------------------------|
-| Response time > 500ms nhưng có trả về | Slow response → check performance |
-| Connection timeout (không có response) | Network / service down          |
-| Chỉ chậm một endpoint cụ thể       | Query / logic của endpoint đó    |
-| Toàn bộ service chậm               | Infrastructure / resource issue  |
+> Slow APIs and timeouts are rarely a code bug — they usually point to infrastructure, data volume, or an external dependency.
 
 ---
 
-## Bước 1 — Đo và isolate
+## Step 0 — Identify the type of problem
 
-- [ ] Response time cụ thể là bao nhiêu? (500ms? 2s? 10s?)
-- [ ] Chỉ chậm endpoint này hay nhiều endpoint?
-- [ ] Chỉ chậm ở một environment hay tất cả?
-- [ ] Chậm liên tục hay chỉ ở một số thời điểm (peak hours)?
+| Symptom                                    | Direction                           |
+|--------------------------------------------|-------------------------------------|
+| Response time > 500ms but a response arrives | Slow response → check performance |
+| Connection timeout, no response at all     | Network issue or service is down    |
+| Only one specific endpoint is slow         | Query or logic in that endpoint     |
+| All endpoints across the service are slow  | Infrastructure or resource issue    |
 
 ---
 
-## Bước 2 — Check theo từng layer
+## Step 1 — Measure and isolate
+
+- [ ] What is the exact response time? (500ms? 2s? 10s?)
+- [ ] Is only this endpoint slow, or multiple endpoints?
+- [ ] Is it slow in all environments or just one?
+- [ ] Is it consistently slow or only at certain times (e.g. peak hours)?
+
+---
+
+## Step 2 — Check layer by layer
 
 ### Network
-- [ ] Ping / traceroute đến host có bình thường không?
-- [ ] DNS resolution có chậm không?
+- [ ] Is ping / traceroute to the host normal?
+- [ ] Is DNS resolution slow?
 
 ### Application
-- [ ] Endpoint này xử lý logic nặng không? (nhiều vòng lặp, nhiều transform)
-- [ ] Có external API call nào bên trong endpoint này không?
+- [ ] Does this endpoint perform heavy computation? (large loops, many transforms)
+- [ ] Does it make external API calls internally?
 
 ### Database
-- [ ] Query đang chạy có index chưa?
-- [ ] Kích thước data lớn bất thường không? (full table scan?)
-- [ ] Connection pool có bị exhausted không?
+- [ ] Is the query using an index?
+- [ ] Is the data volume unusually large? (full table scan?)
+- [ ] Is the connection pool exhausted?
 
 ### Infrastructure
-- [ ] CPU / memory của server có bình thường không?
-- [ ] Có traffic spike nào gần đây không?
+- [ ] Are CPU and memory on the server within normal range?
+- [ ] Was there a recent traffic spike?
 
 ---
 
-## Bước 3 — Reproduce và đo lại
+## Step 3 — Reproduce and re-measure
 
-- [ ] Gọi lại endpoint nhiều lần — response time có ổn định không hay dao động?
-- [ ] Thử với payload nhỏ hơn — thời gian có giảm không?
-- [ ] Thử vào giờ thấp traffic — vẫn chậm không?
-
----
-
-## Bước 4 — Escalate nếu cần
-
-⏱ Nếu sau **30 phút** chưa xác định được layer nào gây chậm → escalate  
-Chuẩn bị: response time log từ `api_checker`, environment, thời điểm xảy ra
-
-→ Xem thông tin escalation tại [triage.md]
+- [ ] Call the endpoint multiple times — is response time stable or fluctuating?
+- [ ] Try with a smaller payload — does time improve?
+- [ ] Try during low-traffic hours — still slow?
 
 ---
 
-## Bước 5 — Verify fix
+## Step 4 — Escalate if needed
 
-- [ ] Chạy lại `api_checker` → response time dưới threshold?
-- [ ] Đo trong ít nhất 3-5 lần liên tiếp để confirm ổn định
+⏱ If the slow layer cannot be identified after **30 minutes** → escalate
+Prepare: response time log from `api_checker`, environment, and time of occurrence
+
+→ See escalation contacts at [triage.md](triage.md)
+
+---
+
+## Step 5 — Verify the fix
+
+- [ ] Re-run `api_checker` → response time is below threshold?
+- [ ] Measure at least 3–5 consecutive times to confirm stability
 
 ```
 Root cause   : 

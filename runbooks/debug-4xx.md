@@ -1,75 +1,75 @@
 # Debug: API 4xx Errors
 
-Dùng khi `api_checker` báo ❌ với status 400, 401, 403, 404, 422.
-Không chắc đây là vấn đề của bạn? → [triage.md]
+Use when `api_checker` reports ❌ with status 400, 401, 403, 404, or 422.
+Not sure this is your issue? → [triage.md](triage.md)
 
-> 4xx = lỗi phía client. Kiểm tra request trước, không cần đào log server ngay.
-
----
-
-## Bước 0 — Xác định status code
-
-| Code | Nghĩa                    | Hướng debug đầu tiên              |
-|------|--------------------------|-----------------------------------|
-| 400  | Bad Request              | Kiểm tra format / schema của body |
-| 401  | Unauthorized             | Kiểm tra token / API key          |
-| 403  | Forbidden                | Kiểm tra permission / role        |
-| 404  | Not Found                | Kiểm tra URL, resource có tồn tại không |
-| 422  | Unprocessable Entity     | Kiểm tra validation rules của API |
+> 4xx = client-side error. Inspect the request first — no need to dig into server logs yet.
 
 ---
 
-## Bước 1 — Kiểm tra request
+## Step 0 — Identify the status code
 
-- [ ] URL có đúng không? (typo, trailing slash, version `/v1` vs `/v2`)
-- [ ] Method đúng chưa? (GET / POST / PUT / PATCH / DELETE)
-- [ ] Headers đầy đủ chưa? (`Content-Type`, `Authorization`, `Accept`)
-- [ ] Body đúng format chưa? (JSON valid, required fields có đủ không)
+| Code | Meaning                  | First debug direction                    |
+|------|--------------------------|------------------------------------------|
+| 400  | Bad Request              | Check request body format / schema       |
+| 401  | Unauthorized             | Check token or API key                   |
+| 403  | Forbidden                | Check permission or role                 |
+| 404  | Not Found                | Check URL and whether the resource exists |
+| 422  | Unprocessable Entity     | Check API validation rules               |
 
 ---
 
-## Bước 2 — Theo status code cụ thể
+## Step 1 — Inspect the request
+
+- [ ] Is the URL correct? (typo, trailing slash, version `/v1` vs `/v2`)
+- [ ] Is the HTTP method correct? (GET / POST / PUT / PATCH / DELETE)
+- [ ] Are all required headers present? (`Content-Type`, `Authorization`, `Accept`)
+- [ ] Is the request body valid? (valid JSON, all required fields included)
+
+---
+
+## Step 2 — Drill down by status code
 
 ### 401 Unauthorized
-- [ ] Token còn hạn không?
-- [ ] Token được gửi đúng chỗ chưa? (`Bearer` prefix, header name đúng không)
-- [ ] API key đúng environment chưa? (staging key dùng cho production?)
+- [ ] Is the token still valid (not expired)?
+- [ ] Is the token sent correctly? (`Bearer` prefix, correct header name)
+- [ ] Is the API key for the right environment? (staging key used in production?)
 
 ### 403 Forbidden
-- [ ] User/service account có đúng role/permission không?
-- [ ] Resource có bị restrict theo IP / org / plan không?
+- [ ] Does the user or service account have the correct role or permission?
+- [ ] Is the resource restricted by IP, org, or plan?
 
 ### 404 Not Found
-- [ ] Resource có tồn tại không? (đã bị xóa, chưa được tạo, hay sai ID?)
-- [ ] URL path có đúng không? So sánh với API docs
+- [ ] Does the resource exist? (deleted, not yet created, or wrong ID?)
+- [ ] Is the URL path correct? Compare against API docs
 
 ### 422 Unprocessable Entity
-- [ ] Đọc kỹ response body — thường có field `errors` liệt kê rõ lỗi gì
-- [ ] So sánh body đang gửi với schema mà API yêu cầu
+- [ ] Read the response body carefully — usually contains an `errors` field with details
+- [ ] Compare the request body against the schema the API expects
 
 ---
 
-## Bước 3 — Reproduce và isolate
+## Step 3 — Reproduce and isolate
 
-- [ ] Thử gọi thẳng bằng `curl` hoặc Postman để loại trừ code issue
-- [ ] Lỗi xảy ra với mọi user hay chỉ một số? (nếu chỉ một số → permission issue)
-- [ ] Lỗi xảy ra ở mọi environment hay chỉ production? (nếu chỉ prod → config khác biệt)
-
----
-
-## Bước 4 — Escalate nếu cần
-
-⏱ Nếu sau **30 phút** chưa xác định được → escalate  
-Chuẩn bị: raw request + raw response để paste ngay khi hỏi
-
-→ Xem thông tin escalation tại [triage.md]
+- [ ] Try calling directly with `curl` or Postman to rule out a code-level issue
+- [ ] Does the error occur for all users or only some? (only some → permission issue)
+- [ ] Does the error occur in all environments or only production? (only prod → config difference)
 
 ---
 
-## Bước 5 — Verify fix
+## Step 4 — Escalate if needed
 
-- [ ] Reproduce lại → response đúng như mong đợi?
-- [ ] Test với các user/role khác nhau nếu là permission issue
+⏱ If the root cause is still unclear after **30 minutes** → escalate
+Prepare: raw request + raw response to share immediately
+
+→ See escalation contacts at [triage.md](triage.md)
+
+---
+
+## Step 5 — Verify the fix
+
+- [ ] Reproduce again → response is now correct?
+- [ ] Test with different users or roles if it was a permission issue
 
 ```
 Root cause   : 

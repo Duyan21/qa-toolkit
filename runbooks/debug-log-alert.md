@@ -1,29 +1,29 @@
 # Debug: Log Watcher Alert
 
-Dùng khi `log_watcher` bắn 🚨 ALERT — error frequency vượt ngưỡng trong sliding window.
-Không chắc đây là vấn đề của bạn? → [triage.md]
+Use when `log_watcher` fires 🚨 ALERT — error frequency has exceeded the threshold within the sliding window.
+Not sure this is your issue? → [triage.md](triage.md)
 
 ---
 
-## Thông tin cần đọc từ alert
+## Read the alert output first
 
-Khi `log_watcher` bắn alert, nó in ra:
+When `log_watcher` fires, it prints:
 
 ```
 🚨 ALERT: 5 errors in 60 seconds
    From: 10:00:05 → 10:00:58
 ```
 
-Thu thập ngay:
-- [ ] Bao nhiêu errors trong khoảng thời gian nào?
-- [ ] Error type là gì? (xem summary bên dưới alert)
-- [ ] Thời điểm bắt đầu — có gì xảy ra trước đó không? (deploy, cron job, traffic spike)
+Collect immediately:
+- [ ] How many errors occurred in what time window?
+- [ ] What is the error type? (check the summary printed below the alert)
+- [ ] When did it start — did anything happen just before? (deploy, cron job, traffic spike)
 
 ---
 
-## Bước 1 — Đọc session summary
+## Step 1 — Read the session summary
 
-`log_watcher` in summary định kỳ và session report khi exit:
+`log_watcher` prints a periodic summary and a session report on exit:
 
 ```
 Total errors: 7
@@ -31,51 +31,51 @@ Total errors: 7
   - Auth service unreachable (x3)
 ```
 
-- [ ] Error nào chiếm tỉ lệ cao nhất?
-- [ ] Có một loại error tăng đột biến hay nhiều loại cùng lúc?
-  - Một loại tăng → vấn đề ở service cụ thể
-  - Nhiều loại cùng lúc → có thể là infrastructure issue
+- [ ] Which error type has the highest count?
+- [ ] Is one error type spiking, or multiple types at the same time?
+  - One type spiking → issue is in a specific service
+  - Multiple types simultaneously → likely an infrastructure issue
 
 ---
 
-## Bước 2 — Xác định severity
+## Step 2 — Assess severity
 
-| Tình huống                              | Mức độ          | Hành động           |
-|-----------------------------------------|-----------------|---------------------|
-| Error rate tăng nhưng đang giảm dần     | Low             | Monitor thêm        |
-| Error rate ổn định ở mức cao            | Medium          | Debug ngay          |
-| Error rate đang tăng liên tục           | High            | Escalate ngay       |
-| Toàn bộ service không response          | Critical        | Escalate + wake oncall |
-
----
-
-## Bước 3 — Route đến đúng runbook
-
-Dựa vào error message trong log:
-
-- Lỗi liên quan đến API / HTTP status → [debug-5xx.md] hoặc [debug-4xx.md]
-- Lỗi liên quan đến response time / timeout → [debug-slow-api.md]
-- Lỗi database / connection → check database layer trực tiếp
-- Lỗi auth / token → [debug-4xx.md] → section 401
+| Situation                              | Severity | Action              |
+|----------------------------------------|----------|---------------------|
+| Error rate is rising but now declining | Low      | Keep monitoring     |
+| Error rate is stable at a high level   | Medium   | Debug now           |
+| Error rate is continuously increasing  | High     | Escalate now        |
+| Entire service is not responding       | Critical | Escalate + page oncall |
 
 ---
 
-## Bước 4 — Escalate nếu cần
+## Step 3 — Route to the right runbook
 
-⏱ Nếu severity là **High hoặc Critical** → không cần đợi 30 phút, escalate ngay
+Based on the error messages in the log:
 
-Chuẩn bị khi escalate:
-- Copy paste đoạn alert + summary từ `log_watcher`
-- Thời điểm bắt đầu và tần suất hiện tại
-
-→ Xem thông tin escalation tại [triage.md]
+- API / HTTP status errors → [debug-5xx.md](debug-5xx.md) or [debug-4xx.md](debug-4xx.md)
+- Response time / timeout errors → [debug-slow-api.md](debug-slow-api.md)
+- Database / connection errors → inspect the database layer directly
+- Auth / token errors → [debug-4xx.md](debug-4xx.md) → section 401
 
 ---
 
-## Bước 5 — Verify ổn định
+## Step 4 — Escalate if needed
 
-- [ ] Error rate đã về 0 hoặc về mức bình thường chưa?
-- [ ] `log_watcher` không còn bắn alert trong 10 phút tiếp theo?
+⏱ If severity is **High or Critical** → do not wait 30 minutes, escalate immediately
+
+Prepare when escalating:
+- Copy the full alert output + summary from `log_watcher`
+- Start time and current error frequency
+
+→ See escalation contacts at [triage.md](triage.md)
+
+---
+
+## Step 5 — Verify stability
+
+- [ ] Has the error rate returned to zero or normal baseline?
+- [ ] Does `log_watcher` remain quiet for the next 10 minutes?
 
 ```
 Root cause   : 
