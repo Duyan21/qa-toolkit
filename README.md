@@ -103,7 +103,7 @@ Wednesday with 38 issues created
 
 ```
 qa-toolkit/
-├── log_reader/
+├── log_monitor/
 │   ├── log_reader.py        # static log parser
 │   ├── log_watcher.py       # real-time log monitor with alerting
 │   ├── log_generator.py     # simulates a live app writing log entries
@@ -129,7 +129,7 @@ qa-toolkit/
 
 ```bash
 # Static log analysis
-cd log_reader && python log_reader.py
+cd log_monitor && python log_reader.py
 
 # Real-time log monitoring (open two terminals)
 python log_generator.py          # terminal 1: generate live logs
@@ -153,6 +153,20 @@ python window_functions.py       # window function queries
 python load_real_data.py         # load vscode_issues.json into DB
 python real_data_queries.py      # generate issues health report
 ```
+
+## Troubleshooting
+
+When a tool surfaces an issue, use the runbooks to debug step by step:
+
+| Tool output                              | Runbook                                  |
+|------------------------------------------|------------------------------------------|
+| `api_checker` → ❌ status 5xx            | [runbooks/debug-5xx.md](runbooks/debug-5xx.md) |
+| `api_checker` → ❌ status 4xx            | [runbooks/debug-4xx.md](runbooks/debug-4xx.md) |
+| `api_checker` → ⚠️ slow response         | [runbooks/debug-slow-api.md](runbooks/debug-slow-api.md) |
+| `log_watcher` → 🚨 ALERT                 | [runbooks/debug-log-alert.md](runbooks/debug-log-alert.md) |
+| `json_diff` → missing keys / diff values | [runbooks/debug-json-mismatch.md](runbooks/debug-json-mismatch.md) |
+
+Not sure which applies? Start at [runbooks/triage.md](runbooks/triage.md).
 
 ## Requirements
 
