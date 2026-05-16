@@ -45,6 +45,8 @@ def tail_log(filepath: str) -> None:
                             f"🚨 ALERT: {len(error_times)} errors in {WINDOW} seconds")
                         print(
                             f"   From: {error_times[0].strftime('%H:%M:%S')} → {error_times[-1].strftime('%H:%M:%S')}")
+                        print(
+                            f"   -> Runbook: runbooks/debug-log-alert.md")
                         error_times.clear()
                 # Print summary every SUMMARY_INTERVAL seconds
                 if (datetime.now() - last_summary_time).seconds >= SUMMARY_INTERVAL:

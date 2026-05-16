@@ -26,3 +26,6 @@ with open("staging.json", "r") as f1, open("production.json", "r") as f2:
     print(f"\nIdentical values: {len(identical)}")
     for key in identical:
         print(f" - {key}")
+
+    if missing_keys or diff_values:
+        print(f"\n-> Runbook: runbooks/debug-json-mismatch.md")
