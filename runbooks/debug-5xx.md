@@ -65,6 +65,7 @@ Not sure this is your issue? → [triage.md](triage.md)
 - [ ] Reproduce the original scenario → error no longer occurs?
 - [ ] Check related endpoints — no regressions?
 - [ ] Is there a test case covering this? If not → add one
+- [ ] Does this runbook need updating based on what you learned?
 
 **Record after fixing:**
 

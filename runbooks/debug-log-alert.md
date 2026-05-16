@@ -76,6 +76,7 @@ Prepare when escalating:
 
 - [ ] Has the error rate returned to zero or normal baseline?
 - [ ] Does `log_watcher` remain quiet for the next 10 minutes?
+- [ ] Does this runbook need updating based on what you learned?
 
 ```
 Root cause   : 

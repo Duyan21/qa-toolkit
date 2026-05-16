@@ -70,6 +70,7 @@ Prepare: raw request + raw response to share immediately
 
 - [ ] Reproduce again → response is now correct?
 - [ ] Test with different users or roles if it was a permission issue
+- [ ] Does this runbook need updating based on what you learned?
 
 ```
 Root cause   : 

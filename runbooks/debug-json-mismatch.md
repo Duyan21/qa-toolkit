@@ -72,6 +72,7 @@ Prepare when escalating:
 
 - [ ] Re-run `json_diff` after the fix → no more mismatches?
 - [ ] Run in both directions: staging vs prod and prod vs staging
+- [ ] Does this runbook need updating based on what you learned?
 
 ```
 Root cause   : 

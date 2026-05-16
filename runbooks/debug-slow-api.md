@@ -69,6 +69,7 @@ Prepare: response time log from `api_checker`, environment, and time of occurren
 
 - [ ] Re-run `api_checker` → response time is below threshold?
 - [ ] Measure at least 3–5 consecutive times to confirm stability
+- [ ] Does this runbook need updating based on what you learned?
 
 ```
 Root cause   : 

@@ -62,3 +62,15 @@ Answer these 3 questions in order:
 - Slack: `#incident` or `#backend-oncall` _(update with your team's channel)_
 - Ticket: create an issue using the [bug-report] template
 - On-call: see rotation list at [rotation link] _(update with your team's link)_
+
+---
+
+## Improving a runbook
+
+If you found a gap or inaccuracy in a runbook during an incident, file a ticket titled:
+
+```
+Runbook uplift: <filename>
+```
+
+Link it to the post-mortem or incident ticket so the context is preserved.
