@@ -4,11 +4,11 @@
 *.png
 
 # Large data files
-sql_analysis/vscode_issues.json
+tools/sql_analysis/vscode_issues.json
 
 # Scratch files
-json_diff/file1.json
-json_diff/file2.json
+tools/json_diff/file1.json
+tools/json_diff/file2.json
 
 # Claude Code local config
 .claude/settings.local.json

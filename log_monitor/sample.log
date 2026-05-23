@@ -1,8 +1,0 @@
-2024-01-15 09:00:01 INFO  App started
-2024-01-15 09:00:05 ERROR Database connection failed: timeout
-2024-01-15 09:00:06 INFO  Retrying connection
-2024-01-15 09:00:10 ERROR Database connection failed: timeout
-2024-01-15 09:00:15 WARNING Response time high: 850ms
-2024-01-15 09:00:20 ERROR Auth service unreachable
-2024-01-15 09:00:25 ERROR Auth service unreachable
-2024-01-15 09:00:30 ERROR Database connection failed: timeout

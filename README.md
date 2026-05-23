@@ -103,48 +103,51 @@ Wednesday with 38 issues created
 
 ```
 qa-toolkit/
-├── log_monitor/
-│   ├── log_reader.py        # static log parser
-│   ├── log_watcher.py       # real-time log monitor with alerting
-│   ├── log_generator.py     # simulates a live app writing log entries
-│   └── sample.log
-├── json_diff/
-│   ├── json_diff.py
-│   ├── staging.json
-│   └── production.json
-├── api_checker/
-│   ├── api_checker.py
-│   ├── api_log_analyzer.py
-│   └── api_health.log
-└── sql_analysis/
-    ├── setup_db.py          # seed simulated test run data
-    ├── queries.py           # aggregate queries on test_runs
-    ├── window_functions.py  # ROW_NUMBER / RANK window queries
-    ├── load_real_data.py    # load real VSCode GitHub issues
-    ├── real_data_queries.py # health report on real issue data
-    └── vscode_issues.json
+├── tools/
+│   ├── log_monitor/
+│   │   ├── log_reader.py        # static log parser
+│   │   ├── log_watcher.py       # real-time log monitor with alerting
+│   │   ├── log_generator.py     # simulates a live app writing log entries
+│   │   └── sample.log
+│   ├── json_diff/
+│   │   ├── json_diff.py
+│   │   ├── staging.json
+│   │   └── production.json
+│   ├── api_checker/
+│   │   ├── api_checker.py
+│   │   ├── api_log_analyzer.py
+│   │   └── api_health.log
+│   └── sql_analysis/
+│       ├── setup_db.py          # seed simulated test run data
+│       ├── queries.py           # aggregate queries on test_runs
+│       ├── window_functions.py  # ROW_NUMBER / RANK window queries
+│       ├── load_real_data.py    # load real VSCode GitHub issues
+│       ├── real_data_queries.py # health report on real issue data
+│       └── vscode_issues.json
+├── runbooks/                    # incident response guides
+└── docs/                        # deep-dives and issue analysis
 ```
 
 ## How to run
 
 ```bash
 # Static log analysis
-cd log_monitor && python log_reader.py
+cd tools/log_monitor && python log_reader.py
 
 # Real-time log monitoring (open two terminals)
-python log_generator.py          # terminal 1: generate live logs
+python log_generator.py             # terminal 1: generate live logs
 python log_watcher.py live_app.log  # terminal 2: watch and alert
 
 # JSON comparison
-cd json_diff && python json_diff.py
+cd tools/json_diff && python json_diff.py
 
 # API health check
-cd api_checker
+cd tools/api_checker
 python api_checker.py            # runs checks, writes api_health.log
 python api_log_analyzer.py       # reads log, prints summary report
 
 # SQL analysis (simulated data)
-cd sql_analysis
+cd tools/sql_analysis
 python setup_db.py               # create and seed database
 python queries.py                # aggregate queries
 python window_functions.py       # window function queries
@@ -175,3 +178,8 @@ pip install requests
 ```
 
 All other modules (`sqlite3`, `collections`, `datetime`, `time`, `json`) are part of the Python standard library.
+
+## Documentation
+
+- [Runbooks](runbooks/triage.md) — incident response guides
+- [Issue Analysis](docs/issue-analysis/) — deep-dives into open-source bugs
