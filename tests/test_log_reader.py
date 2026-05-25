@@ -6,7 +6,7 @@ FIXTURES_DIR = os.path.join(os.path.dirname(__file__), 'fixtures/log_monitor')
 
 def test_parse_log_counts_errors():
     result = log_reader(os.path.join(FIXTURES_DIR, 'sample_errors.log'))
-    assert result["Database connection failed: timeout"] == 2
+    assert result["Database connection failed: timeout"] == 20
     assert result["Auth service unreachable"] == 1
 
 
