@@ -1,5 +1,7 @@
 # QA Toolkit
 
+[![QA Toolkit Tests](https://github.com/Duyan21/qa-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/Duyan21/qa-toolkit/actions/workflows/test.yml)
+
 A collection of CLI scripts that automate common QA and engineering workflows —
 turning raw logs, API responses, JSON data, and real-world datasets into actionable insights.
 
