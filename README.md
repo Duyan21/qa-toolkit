@@ -34,18 +34,25 @@ Total errors: 7
 Pair with `log_generator.py` to simulate a live app writing randomized log entries.
 
 ### json_diff
-Compares two JSON files and reports missing keys and value differences.
+Compares two JSON files recursively and groups results into four buckets:
+missing in production, extra in production, different values, and identical.
 Useful for verifying API contract consistency across environments (e.g. staging vs production).
 
 ```
-Missing keys in production: 1
- - last_login
+Summary — identical: 3  |  different: 1  |  missing in production: 1  |  extra in production: 0
 
-Different values: 1
- - role: staging='admin' vs production='viewer'
+Missing in production (1):
+  - $.last_login: staging='2024-01-15'
 
-Identical: 3
- status, user_id, email
+Different (1):
+  ~ $.role: staging='admin' vs production='viewer'
+
+Identical (3):
+  = $.user_id: 1001
+  = $.email: 'an.ho@company.com'
+  = $.status: 'active'
+
+-> Runbook: runbooks/debug-json-mismatch.md
 ```
 
 ### api_checker + api_log_analyzer
@@ -124,6 +131,13 @@ qa-toolkit/
 │       ├── load_real_data.py    # load real VSCode GitHub issues
 │       ├── real_data_queries.py # health report on real issue data
 │       └── vscode_issues.json
+├── tests/
+│   ├── fixtures/
+│   │   ├── json_diff/           # staging/production JSON pairs per scenario
+│   │   └── log_monitor/         # sample log files
+│   ├── test_json_diff.py
+│   ├── test_api_checker.py
+│   └── test_log_reader.py
 ├── runbooks/                    # incident response guides
 └── docs/                        # deep-dives and issue analysis
 ```
@@ -174,10 +188,28 @@ Not sure which applies? Start at [runbooks/triage.md](runbooks/triage.md).
 ## Requirements
 
 ```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
+| Package | Used by |
+|---|---|
+| `requests` | `api_checker` — HTTP calls |
+| `pytest` | test suite |
+| `responses` | `test_api_checker` — intercepts HTTP without a real server |
+
 All other modules (`sqlite3`, `collections`, `datetime`, `time`, `json`) are part of the Python standard library.
+
+## Testing
+
+```bash
+# Run all tests
+pytest
+
+# Run a specific tool's tests with verbose output
+pytest tests/test_json_diff.py -v
+pytest tests/test_api_checker.py -v
+pytest tests/test_log_reader.py -v
+```
 
 ## Documentation
 
