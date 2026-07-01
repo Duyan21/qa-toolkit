@@ -124,20 +124,24 @@ _Only if the project uses domain-specific terms that need definition. Otherwise 
 
 ---
 
-## Assumptions Log
+## Section 7: Assumptions Log
 
-_Everything you assumed because documentation didn't state it explicitly. Mark each as [CONFIRMED] or [UNCONFIRMED] after reading code._
+_Everything you assumed because documentation didn't state it explicitly. Update frequency: when architecture or scope changes — not every sprint._
 
-| # | Assumption | Source | Status |
-|---|-----------|--------|--------|
-| 1 | | README / inference | ⏳ |
-| 2 | | | ⏳ |
+| # | Assumption | Basis | Risk if wrong | Status |
+|---|-----------|-------|---------------|--------|
+| A1 | | README / inference | | UNCONFIRMED |
+| A2 | | | | UNCONFIRMED |
+
+_Status values: CONFIRMED (verified by code or probe test) / UNCONFIRMED / REJECTED (disproven)_
 
 ---
 
-## Open Questions
+## Section 8: Open Questions
 
-_Things you still don't know after reading README + running the app. These drive your code reading in Step 7._
+_Things you still don't know after reading README + running the app. Drive follow-up investigation and feed into the evaluation report._
 
-1. _[question]_
-2. _[question]_
+| # | Question | Why it matters |
+|---|---------|---------------|
+| Q1 | | |
+| Q2 | | |

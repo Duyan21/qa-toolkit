@@ -228,14 +228,15 @@ All endpoints are prefixed with `/todos`.
 
 ## Section 7: Assumptions Log
 
+_Update frequency: when architecture or scope changes. Mark Status as CONFIRMED once verified by code reading or probe test, REJECTED if disproven._
 
-| # | Assumption | Basis | Risk if wrong |
-|---|-----------|-------|---------------|
-| A1 | The project is intended as a learning/tutorial artifact, not a production deployment. | README language ("perfect for beginners"), author bio, absence of any production config. | Low — the code itself confirms this regardless of intent. |
-| A2 | The actual running Python version is 3.14 (found in the local venv). The code's stated requirement is `3.7+`. | `env/pyvenv.cfg` and repro test. | Medium — the stated `3.7+` range in the README is itself outdated: `requirements.txt` pins Pydantic v1.10.12, which has known incompatibilities with Python 3.12+ (confirmed broken on 3.14 in repro). The true supported range is unknown without a clean test matrix. This is a third layer of the same documentation drift flagged in Section 3.2 and Section 5. |
-| A3 | The `status` field is intended to be a free-text string with no enforced values. | No enum constraint in model or schema. | Medium — if the intent was to enforce `pending / in-progress / done`, the missing constraint is a bug, not a design choice. |
-| A4 | `todo.db` is not meant to be committed to version control. | No `.gitignore` entry exists in the repo to confirm or deny this. | Low — consequence is accidental data commit, not a functional gap. |
-| A5 | The project has no other entry points or scripts beyond `uvicorn main:app`. | Only `main.py` was found at root; no `Makefile`, `scripts/`, or `Procfile`. | Low — verified by filesystem inspection. |
+| # | Assumption | Basis | Risk if wrong | Status |
+|---|-----------|-------|---------------|--------|
+| A1 | The project is intended as a learning/tutorial artifact, not a production deployment. | README language ("perfect for beginners"), author bio, absence of any production config. | Low — the code itself confirms this regardless of intent. | CONFIRMED |
+| A2 | The actual running Python version is 3.14 (found in the local venv). The code's stated requirement is `3.7+`. | `env/pyvenv.cfg` and repro test. | Medium — the stated `3.7+` range is outdated: `requirements.txt` pins Pydantic v1.10.12, incompatible with Python 3.12+. True supported range unknown without a clean test matrix. | CONFIRMED (broken on 3.14 in repro) |
+| A3 | The `status` field is intended to be a free-text string with no enforced values. | No enum constraint in model or schema. | Medium — if the intent was to enforce `pending / in-progress / done`, the missing constraint is a bug, not a design choice. | CONFIRMED (probe test — any string accepted with 200) |
+| A4 | `todo.db` is not meant to be committed to version control. | No `.gitignore` entry exists in the repo to confirm or deny this. | Low — consequence is accidental data commit, not a functional gap. | UNCONFIRMED |
+| A5 | The project has no other entry points or scripts beyond `uvicorn main:app`. | Only `main.py` was found at root; no `Makefile`, `scripts/`, or `Procfile`. | Low — verified by filesystem inspection. | CONFIRMED |
 
 ---
 
