@@ -56,5 +56,5 @@ def analyze_log_file(log_file_path):
             print(f" - [{code}] {api} (Response time: {response_time} ms)")
         print(f" -> Runbook: runbooks/debug-4xx.md")
 
-log_path = os.path.join(os.path.dirname(__file__), '..', 'api_checker', 'api_health.log')
+log_path = os.path.join(os.path.dirname(__file__), 'api_health.log')
 analyze_log_file(log_path)
