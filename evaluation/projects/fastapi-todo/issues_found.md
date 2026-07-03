@@ -108,7 +108,7 @@ Fix:       Not applied — evaluation is read-only. Recommended: add `autoincrem
 
 ---
 
-## Docker-Readiness Assessment (Week 8, 2026-07-01)
+## Docker-Readiness Assessment
 
 | Item | Status | Finding |
 |------|--------|---------|
