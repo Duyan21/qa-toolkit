@@ -11,6 +11,10 @@ tools/sql_analysis/vscode_issues.json
 tools/json_diff/file1.json
 tools/json_diff/file2.json
 
+# Run artifacts from probes
+tests/probes/fastapi-todo/outputs/test_log.txt
+tests/probes/fastapi-todo/outputs/test_report.json
+
 # Claude Code local config
 .claude/settings.local.json
 
